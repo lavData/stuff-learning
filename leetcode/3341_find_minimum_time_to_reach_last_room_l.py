@@ -49,7 +49,7 @@
 # 2 <= m == moveTime[i].length <= 50
 # 0 <= moveTime[i][j] <= 109
 #
-
+import heapq
 from typing import List
 
 
@@ -57,12 +57,39 @@ class Solution:
     def minTimeToReach(self, moveTime: List[List[int]]) -> int:
         n, m = len(moveTime), len(moveTime[0])
 
-        dp = [[float('inf')] * m for _ in range(n)]
-        dp[0][0] = 0
+        pq = [(0, 0, 0)]
+        visited = set()
 
-        
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)] # right, down, left, up
+
+        while pq:
+            time, x, y = heapq.heappop(pq)
+
+            if (x, y) == (n-1, m-1):
+                return time
+
+            if (x, y) in visited:
+                continue
+
+            visited.add((x, y))
+
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy
+
+                if 0 <= nx < n and 0 <= ny < m:
+                    next_time = max(time, moveTime[nx][ny]) + 1
+
+                    if (nx, ny) not in visited:
+                        heapq.heappush(pq, (next_time, nx, ny))
+
+        return -1
+
 
 
 
 def test_case():
     assert Solution().minTimeToReach([[0, 4], [4, 4]]) == 6
+
+
+if __name__ == '__main__':
+    test_case()
