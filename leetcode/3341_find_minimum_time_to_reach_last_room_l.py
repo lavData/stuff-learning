@@ -50,9 +50,11 @@
 # 0 <= moveTime[i][j] <= 109
 #
 import heapq
+from collections import deque
 from typing import List
 
 
+# dijkstra
 class Solution:
     def minTimeToReach(self, moveTime: List[List[int]]) -> int:
         n, m = len(moveTime), len(moveTime[0])
@@ -85,10 +87,38 @@ class Solution:
         return -1
 
 
+class Solution2:
+    def minTimeToReach(self, moveTime: List[List[int]]) -> int:
+        n, m = len(moveTime), len(moveTime[0])
+
+        dp = [[float('inf')] * m for _ in range(n)]
+        dp[0][0] = 0
+
+        queue = deque([(0, 0)])
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+        while queue:
+            i, j = queue.popleft()
+            current_time = dp[i][j]
+
+            for di, dj in directions:
+                ni, nj = i + di, j + dj
+
+                if 0 <= ni < n and 0 <= nj < m:
+                    departure_time = max(current_time, moveTime[ni][nj])
+                    arrival_time = departure_time + 1
+
+                    if arrival_time < dp[ni][nj]:
+                        dp[ni][nj] = arrival_time
+                        queue.append((ni, nj))
+
+        return dp[-1][-1]
+
 
 
 def test_case():
     assert Solution().minTimeToReach([[0, 4], [4, 4]]) == 6
+    assert Solution2().minTimeToReach([[0, 4], [4, 4]]) == 6
 
 
 if __name__ == '__main__':
