@@ -1,4 +1,5 @@
-# You are given a 0-indexed, strictly increasing integer array nums and a positive integer diff. A triplet (i, j, k) is an arithmetic triplet if the following conditions are met:
+# You are given a 0-indexed, strictly increasing integer array nums and a positive integer diff.
+# A triplet (i, j, k) is an arithmetic triplet if the following conditions are met:
 #
 # i < j < k,
 # nums[j] - nums[i] == diff, and
@@ -30,7 +31,16 @@
 # 1 <= diff <= 50
 # nums is strictly increasing.
 
+from typing import List
+
 
 class Solution:
     def arithmeticTriplets(self, nums: List[int], diff: int) -> int:
-        pass
+        ele_set = set(nums)
+
+        ans = 0
+        for i in range(len(nums) - 2):
+            if nums[i] + diff in ele_set and nums[i] +2 * diff in ele_set:
+                ans += 1
+                continue
+        return ans
