@@ -43,5 +43,26 @@
 from typing import List
 
 class Solution:
+
     def maximumBeauty(self, nums: List[int], k: int) -> int:
-        pass
+        sorted_nums = sorted(nums)
+        
+        if len(nums) == 1:
+            return 1
+
+        longest_subsequence = 0
+
+        for i in range(len(nums)):
+            for j in range(i + 1, len(nums)):
+                if sorted_nums[j] - sorted_nums[i] > 2 * k:
+                    longest_subsequence = max(longest_subsequence, j - i)
+                    break
+
+        return longest_subsequence
+
+
+def test_case():
+    assert Solution().maximumBeauty([4,6,1,2], 2) == 3
+
+
+                    
