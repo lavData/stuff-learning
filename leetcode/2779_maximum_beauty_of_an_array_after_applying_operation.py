@@ -43,26 +43,27 @@
 from typing import List
 
 class Solution:
-
     def maximumBeauty(self, nums: List[int], k: int) -> int:
-        sorted_nums = sorted(nums)
-        
-        if len(nums) == 1:
-            return 1
-
-        longest_subsequence = 0
-
-        for i in range(len(nums)):
-            for j in range(i + 1, len(nums)):
-                if sorted_nums[j] - sorted_nums[i] > 2 * k:
-                    longest_subsequence = max(longest_subsequence, j - i)
-                    break
-
-        return longest_subsequence
-
+        # sort so we can group values whose span ≤ 2k
+        nums.sort()
+        left = 0
+        best = 0
+        # expand right end of window
+        for right in range(len(nums)):
+            # shrink left until window is valid again
+            while nums[right] - nums[left] > 2 * k:
+                left += 1
+            # window [left..right] all can be moved into a single value
+            best = max(best, right - left + 1)
+        return best
 
 def test_case():
-    assert Solution().maximumBeauty([4,6,1,2], 2) == 3
+    assert Solution().maximumBeauty([1,1,1,1], 10) == 4
+    # assert Solution().maximumBeauty([4,6,1,2], 2) == 3
+
+
+if __name__ == '__main__':
+    test_case()
 
 
                     
